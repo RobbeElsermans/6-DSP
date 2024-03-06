@@ -1,0 +1,67 @@
+%BINARIZE THE QTM ACTIVE MARKER SIGNAL
+
+active_marker_location = [637.1 457.7 193.6];   % found in dataset_example.pdf
+active_marker_tolerance = [10 10 10];    % Some prediction value
+
+unid = elina3.Trajectories.Unidentified.Data;
+unid(isnan(unid)) = 0;
+
+unid_x = unid(:,1,:);
+unid_y = unid(:,2,:);
+unid_z = unid(:,3,:);
+
+unid_x_ActMarker_mask_hi = unid_x > (active_marker_location(1) - active_marker_tolerance);
+unid_x_ActMarker_mask_lo = unid_x < (active_marker_location(1) + active_marker_tolerance);
+unid_x_ActMarker_mask_complete = squeeze(unid_x_ActMarker_mask_lo .* unid_x_ActMarker_mask_hi);
+
+unid_y_ActMarker_mask_hi = unid_y > (active_marker_location(2) - active_marker_tolerance);
+unid_y_ActMarker_mask_lo = unid_y < (active_marker_location(2) + active_marker_tolerance);
+unid_y_ActMarker_mask_complete = squeeze(unid_y_ActMarker_mask_lo .* unid_y_ActMarker_mask_hi);
+
+unid_z_ActMarker_mask_hi = unid_z > (active_marker_location(3) - active_marker_tolerance);
+unid_z_ActMarker_mask_lo = unid_z < (active_marker_location(3) + active_marker_tolerance);
+unid_z_ActMarker_mask_complete = squeeze(unid_z_ActMarker_mask_lo .* unid_z_ActMarker_mask_hi);
+
+unid_exact_ActMarker = sum(unid_x_ActMarker_mask_complete .* unid_y_ActMarker_mask_complete .* unid_z_ActMarker_mask_complete)>0.5;
+
+% the data to be exported out
+data = squeeze(unid_exact_ActMarker(:, 1, :));
+
+plot (1:100, data(1:100))
+
+
+function data = BinToQTM(all_data, active_marker_location)
+
+    % unit mm
+    active_marker_location = [637.1 457.7 193.6];   % found in dataset_example.pdf
+    active_marker_tolerance = [10 10 10];    % Some prediction value
+
+    unid = all_data;
+    unid(isnan(unid)) = 0;
+
+    unid_x = unid(:,1,:);
+    unid_y = unid(:,2,:);
+    unid_z = unid(:,3,:);
+
+    unid_x_ActMarker_mask_hi = unid_x > (active_marker_location(1) - active_marker_tolerance);
+    unid_x_ActMarker_mask_lo = unid_x < (active_marker_location(1) + active_marker_tolerance);
+    unid_x_ActMarker_mask_complete = squeeze(unid_x_ActMarker_mask_lo .* unid_x_ActMarker_mask_hi);
+
+    unid_y_ActMarker_mask_hi = unid_y > (active_marker_location(2) - active_marker_tolerance);
+    unid_y_ActMarker_mask_lo = unid_y < (active_marker_location(2) + active_marker_tolerance);
+    unid_y_ActMarker_mask_complete = squeeze(unid_y_ActMarker_mask_lo .* unid_y_ActMarker_mask_hi);
+
+    unid_z_ActMarker_mask_hi = unid_z > (active_marker_location(3) - active_marker_tolerance);
+    unid_z_ActMarker_mask_lo = unid_z < (active_marker_location(3) + active_marker_tolerance);
+    unid_z_ActMarker_mask_complete = squeeze(unid_z_ActMarker_mask_lo .* unid_z_ActMarker_mask_hi);
+
+    data = sum(unid_x_ActMarker_mask_complete .* unid_y_ActMarker_mask_complete .* unid_z_ActMarker_mask_complete)>0.5;
+
+end
+
+
+% the data to be exported out
+data = BinToQTM()
+
+plot (1:100, data(1:100))
+
