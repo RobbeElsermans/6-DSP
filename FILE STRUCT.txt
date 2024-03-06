@@ -1,0 +1,3 @@
+DATASET -> all dataset files
+GUI -> all gui stuff and their methods
+OTHER -> some files to play around
