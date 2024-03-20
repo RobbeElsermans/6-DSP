@@ -27,4 +27,5 @@ function data = QTMToBin(all_data, active_marker_location, active_marker_toleran
     unid_z_ActMarker_mask_complete = squeeze(unid_z_ActMarker_mask_lo .* unid_z_ActMarker_mask_hi);
 
     data = sum(unid_x_ActMarker_mask_complete .* unid_y_ActMarker_mask_complete .* unid_z_ActMarker_mask_complete)>0.5;
+    data = data(1,:);
 end
