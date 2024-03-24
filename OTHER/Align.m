@@ -1,16 +1,22 @@
-function [signalA,signalB, distance] = Align(signalA,signalB)
+function [signalA,signalB_new, distance] = Align(signalA,signalB)
 %ALIGN Summary of this function goes here
 %   Detailed explanation goes here
 
 distance = finddelay(signalA, signalB);
+signalA = signalA;
+
+if (distance == 0)
+    signalB_new = signalB;
+    return;
+end
 
 if (distance < 0)
     % base_sync_1k is behind emg_sync_1k
     % So bring base_sync_1k to the front
     % Calc the lagg again in a smaller area
-    signalA = signalA(abs(distance):end);
+    signalB_new = [zeros(1,abs(distance)), signalB(1:end-abs(distance))];
 else
-    signalB = signalB(abs(distance):end);
+    signalB_new = [signalB(abs(distance):end) , zeros(1,abs(distance))];
 end
 
 end
