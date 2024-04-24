@@ -4,7 +4,7 @@ function signal_bin_1k = SigConToBin(signal,originalFs, desiredFs)
 
 
 % source: https://nl.mathworks.com/help/signal/ug/resampling-uniformly-sampled-signals.html
-[p,q] = rat(desiredFs / originalFs);
+[p,q] = rat(desiredFs / originalFs)
 
 signal_1k = resample(signal,p, q);
 
