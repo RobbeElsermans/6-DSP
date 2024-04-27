@@ -1,9 +1,8 @@
-function [signalA,signalB_new, distance] = Align(signalA,signalB)
+function [signalB_new, distance] = Align(signalA, signalB)
 %ALIGN Summary of this function goes here
 %   Detailed explanation goes here
 
 distance = finddelay(signalA, signalB);
-signalA = signalA;
 
 if (distance == 0)
     signalB_new = signalB;
