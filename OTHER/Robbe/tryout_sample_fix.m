@@ -10,7 +10,8 @@ expected_sample_rate = 1e3;  % 1kHz
 [max_corr, max_corr_index] = max(abs(corr_values));
 delay_samples = lags(max_corr_index);
 
-% Calculate the actual sampling rate of signal2 based on the delay
+% Calculate the actual sampling rate of signal2 based on the delay of the
+% samples
 actual_sample_rate = expected_sample_rate * numel(signal2) / (numel(signal1) + delay_samples);
 
 % Find a rational resampling factor
