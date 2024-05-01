@@ -17,6 +17,6 @@ if (distance < 0)
 else
     signalB_new = [signalB(abs(distance):end) , zeros(1,abs(distance))];
 end
-
+distance = abs(distance);
 end
 
