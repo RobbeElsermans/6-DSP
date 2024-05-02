@@ -1,0 +1,45 @@
+clc, clear, close all;
+display_points = 1000;
+base_sample_rate = 1000;
+
+filename_base = 'pianosync.wav';
+[y,Fs] = audioread(filename_base); % 8kHz sample
+base_sync_1k = SigConToBin(y(:, 1)', Fs, base_sample_rate);
+base_sync_1k_base = double(base_sync_1k)-0.5;
+base_sync_1k = base_sync_1k_base;
+
+filename_EMG = 'opensignals_000780589b3a_2023-12-19_11-12-23.txt';
+data = readmatrix(filename_EMG, 'Range', 4, 'Delimiter', '\t');
+emg_sample_rate = 1000;
+emg_sync_1k = ReadEMG(data, emg_sample_rate, base_sample_rate);
+
+
+[emg_sync_1k, lag_emg] = Align(base_sync_1k, emg_sync_1k);
+emg_sync_1k = emg_sync_1k(lag_emg: end);
+base_sync_1k = base_sync_1k(lag_emg: end);
+
+min_length = floor(min([length(emg_sync_1k) length(base_sync_1k)]));
+emg_sync_1k = emg_sync_1k(1:min_length);
+base_sync_1k = base_sync_1k(1:min_length);
+
+figure;
+hold on;
+plot(emg_sync_1k(1:display_points) +0.6, "r");
+plot(base_sync_1k(1:display_points) - 0.6, "g");
+hold off;
+
+[base_sync_1k, emg_sync_1k] = FindSampleFreq(base_sync_1k, 1000, emg_sync_1k);
+
+% Plot the original and resampled signals (optional)
+% Time axes
+time_signal1 = (0:length(base_sync_1k)-1) / expected_sample_rate;
+time_resampled_signal2 = (0:length(emg_sync_1k)-1) / 1000;
+
+figure;
+hold on
+plot(time_signal1, base_sync_1k, "DisplayName","base");
+plot(time_resampled_signal2, emg_sync_1k, "DisplayName","emg");
+xlabel('Time (s)');
+ylabel('Amplitude');
+xlim([1 2])
+hold off

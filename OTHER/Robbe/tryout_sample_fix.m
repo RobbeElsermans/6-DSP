@@ -1,3 +1,5 @@
+%% Run EMG_fix_sample_Frequency.mlx before this one!
+
 % Load or define your signals
 signal1 = base_sync_1k; % Your first signal here
 signal2 = emg_sync_1k; % Your second signal here
