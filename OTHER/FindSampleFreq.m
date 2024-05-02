@@ -16,7 +16,7 @@ delay_samples = lags(max_corr_index);
 actual_sample_rate = expected_sample_rate * numel(signal2) / (numel(signal1) + delay_samples);
 
 % Find a rational resampling factor
-resampling_factor = expected_sample_rate/actual_sample_rate;
+resampling_factor = actual_sample_rate/expected_sample_rate;%expected_sample_rate/actual_sample_rate;
 [P, Q] = rat(resampling_factor);
 if (P*Q > 2^31) 
     new_sampled_sig = wrong_sampled_sig;
@@ -25,8 +25,9 @@ if (P*Q > 2^31)
 end
 
 % Resample signal2 to match the sampling rate of signal1
+%% Todo: check ofdat we hier direct het aantal samples kunnen indroppen
 new_sampled_sig = resample(signal2, P, Q);
-
+%% 
 % Now signal1 and resampled_signal2 should have the same sampling rate
 
 % Plot the original and resampled signals (optional)
@@ -35,7 +36,7 @@ new_sampled_sig = resample(signal2, P, Q);
 % time_resampled_signal2 = (0:length(new_sampled_sig)-1) / expected_sample_rate;
 
 %bring it back to -0.5 and 0.5
-tresh = (abs(max(new_sampled_sig)) - abs(min(new_sampled_sig)))/2;
-new_sampled_sig(:) = (new_sampled_sig(:)> tresh);
+%tresh = (abs(max(new_sampled_sig)) - abs(min(new_sampled_sig)))/2;
+%new_sampled_sig(:) = (new_sampled_sig(:)> tresh);
 
 end
