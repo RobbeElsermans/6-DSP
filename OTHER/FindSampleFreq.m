@@ -18,6 +18,11 @@ actual_sample_rate = expected_sample_rate * numel(signal2) / (numel(signal1) + d
 % Find a rational resampling factor
 resampling_factor = expected_sample_rate/actual_sample_rate;
 [P, Q] = rat(resampling_factor);
+if (P*Q > 2^31) 
+    new_sampled_sig = wrong_sampled_sig;
+    disp("FindSampleFreq.m - the p*q is too high!");
+    return ;
+end
 
 % Resample signal2 to match the sampling rate of signal1
 new_sampled_sig = resample(signal2, P, Q);

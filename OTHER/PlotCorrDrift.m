@@ -4,7 +4,7 @@ function [corr_start, corr_end] = PlotCorrDrift(frame_size, base_sync_1k, sync_1
 
     % Correlate end:    Last 1000 samples of the signals
     [corr_end, ~] = xcorr(base_sync_1k(end - frame_size:end), sync_1k(end - frame_size:end));
-
+    figure
     % Plot start and end correlations
     hold on;
     plot(corr_start, "DisplayName","Start")
