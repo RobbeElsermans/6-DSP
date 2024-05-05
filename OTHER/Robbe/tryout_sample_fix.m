@@ -21,6 +21,8 @@ clc, clear, close all;
 frame_size = 10001;
 show_plots = 0;
 
+%% 1)
+
 filename_base = 'pianosync.wav';
 [y,Fs] = audioread(filename_base); % 8kHz sample
 base_sync_1k = SigConToBin(y(:, 1)', Fs, 1000);
@@ -34,9 +36,7 @@ emg_sample_rate = 1000;
 emg_sync_1k = ReadEMG(data, emg_sample_rate, 1000);
 emg_indexes = 1:length(emg_sync_1k);
 
-% [emg_sync_1k, lag_emg] = Align(base_sync_1k, emg_sync_1k);
-% emg_sync_1k = emg_sync_1k(lag_emg: end);
-% base_sync_1k = base_sync_1k(lag_emg: end);
+%% 2)
 
 [ emg_corr_start, ~] = xcorr(base_sync_1k(1:frame_size), emg_sync_1k(1:frame_size));
 %shift the signal to the correct position
@@ -67,6 +67,9 @@ if(show_plots)
     plot(base_sync_1k(end-1000:end) - 0.6, "g");
     hold off;
 end
+
+%% 3)
+
 [emg_corr_end, ~] = xcorr(base_sync_1k(end-frame_size:end), emg_sync_1k(end-frame_size:end));
 [~, max_end] = max(emg_corr_end);
 max_end = floor((frame_size-max_end));
@@ -105,7 +108,9 @@ if(show_plots)
     hold off;
 
 end
-% 
+
+%% 4) 
+
 % % Load or define your signals
  signal1 = base_sync_1k; % Your first signal here
  signal2 = emg_sync_1k; % Your second signal here
@@ -118,14 +123,16 @@ expected_sample_rate = 1e3;  % 1kHz
 [max_corr, max_corr_index] = max(abs(corr_values));
 delay_samples = lags(max_corr_index);
 
+%% 5)
 % Calculate the actual sampling rate of signal2 based on the delay of the
 % samples
 actual_sample_rate = expected_sample_rate * numel(signal2) / (numel(signal1) + delay_samples);
-
+%% 6)
 % Find a rational resampling factor
 resampling_factor = actual_sample_rate / expected_sample_rate;
 [P, Q] = rat(resampling_factor);
 
+%% 7)
 % Resample signal2 to match the sampling rate of signal1
 resampled_signal2 = resample(signal2, P, Q);
 
@@ -146,6 +153,8 @@ if(show_plots)
     xlim([1 2])
     hold off
 end
+
+%% 8)
 
 %Maak terug zuiver
 tresh = (abs(max(resampled_signal2)) - abs(min(resampled_signal2)))/2;
