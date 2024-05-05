@@ -1,10 +1,90 @@
-%% Run EMG_fix_sample_Frequency.mlx before this one!
+%% 
+clc, clear, close all;
 
-% Load or define your signals
-signal1 = base_sync_1k; % Your first signal here
-signal2 = emg_sync_1k; % Your second signal here
+frame_size = 10001;
 
-% Assuming signal1 is supposed to be at 1000kHz
+filename_base = 'pianosync.wav';
+[y,Fs] = audioread(filename_base); % 8kHz sample
+base_sync_1k = SigConToBin(y(:, 1)', Fs, 1000);
+base_sync_1k_base = double(base_sync_1k)-0.5;
+base_sync_1k = base_sync_1k_base;
+
+filename_EMG = 'opensignals_000780589b3a_2023-12-19_11-12-23.txt';
+data = readmatrix(filename_EMG, 'Range', 4, 'Delimiter', '\t');
+emg_sample_rate = 1000;
+emg_sync_1k = ReadEMG(data, emg_sample_rate, 1000);
+
+[emg_sync_1k, lag_emg] = Align(base_sync_1k, emg_sync_1k);
+emg_sync_1k = emg_sync_1k(lag_emg: end);
+base_sync_1k = base_sync_1k(lag_emg: end);
+
+
+[ emg_corr_start, ~] = xcorr(base_sync_1k(1:frame_size), emg_sync_1k(1:frame_size));
+%shift the signal to the correct position
+[~, max_start] = max(emg_corr_start);
+max_start = floor((frame_size-max_start))
+
+if max_start < 0
+    base_sync_1k = base_sync_1k(abs(max_start): end-abs(max_start));
+else
+    emg_sync_1k = emg_sync_1k(abs(max_start): end-abs(max_start));
+end
+
+figure;
+subplot(1,2,1);
+title("start")
+hold on;
+plot(emg_sync_1k(1:1000) +0.6, "r");
+plot(base_sync_1k(1:1000) - 0.6, "g");
+hold off;
+
+subplot(1,2,2);
+title("end")
+hold on;
+plot(emg_sync_1k(end-1000:end) +0.6, "r");
+plot(base_sync_1k(end-1000:end) - 0.6, "g");
+hold off;
+
+[emg_corr_end, ~] = xcorr(base_sync_1k(end-frame_size:end), emg_sync_1k(end-frame_size:end));
+[~, max_end] = max(emg_corr_end);
+max_end = floor((frame_size-max_end))
+
+if max_end < 0
+    emg_sync_1k = emg_sync_1k(1: end-abs(max_end));
+else
+    base_sync_1k = base_sync_1k(1: end-abs(max_end));
+end
+
+figure;
+subplot(1,2,1);
+title("start")
+hold on;
+plot(emg_sync_1k(1:1000) +0.6, "r");
+plot(base_sync_1k(1:1000) - 0.6, "g");
+hold off;
+
+subplot(1,2,2);
+title("end")
+hold on;
+plot(emg_sync_1k(end-5000:end) +0.6, "r");
+plot(base_sync_1k(end-5000:end) - 0.6, "g");
+hold off;
+
+figure
+hold on
+title("emg")
+plot(emg_corr_start, "DisplayName","emgStart")
+plot(emg_corr_end, "DisplayName","emgStop")
+xlabel("samples"); ylabel("mag");
+legend()
+hold off;
+
+% 
+% % Load or define your signals
+ signal1 = base_sync_1k; % Your first signal here
+ signal2 = emg_sync_1k; % Your second signal here
+% 
+% % Assuming signal1 is supposed to be at 1000kHz
 expected_sample_rate = 1e3;  % 1kHz
 
 % Use cross-correlation to find the delay between the signals
@@ -38,3 +118,20 @@ xlabel('Time (s)');
 ylabel('Amplitude');
 xlim([1 2])
 hold off
+
+
+
+figure;
+subplot(1,2,1);
+title("start")
+hold on;
+plot(signal1(1:1000) +0.6, "r");
+plot(resampled_signal2(1:1000) - 0.6, "g");
+hold off;
+
+subplot(1,2,2);
+title("end")
+hold on;
+plot(signal1(end-1000:end) +0.6, "r");
+plot(resampled_signal2(end-1000:end) - 0.6, "g");
+hold off;
