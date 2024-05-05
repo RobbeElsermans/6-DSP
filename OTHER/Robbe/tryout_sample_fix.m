@@ -1,7 +1,26 @@
-%% 
+%% Wat doet deze code:
+% 1) Eerst laden we de data in.
+% 2) We correleren de data in het begin om het begin mooi te starten. We
+% kappen dus de data hier af.
+% 3) We correleren de data op het einde om het einde mooi te laten stoppen.
+% We kappen dus de data hier af.
+% 4) We correleren de data opnieuw en we gebruiken de lag tussen de data om
+% de Hoeveelheid lag te bepalen tussen de 2 signalen.
+% 5) Doordat de signalen in het begin en einde gealinieerd zijn, kunnen we
+% deze delen door elkaar (+ de hoeveelheid lag) om de effectieve sample
+% rate te vinden.
+% 6) Deze factor gebruiken we om de P en Q te bepalen (up and down
+% samplings).
+% 7) Met P en Q resamplen we en gaan we verder naar het displayen.
+% 8) Doordat we gaan interpoleren, krijgen we het fenomeen genaamd picket
+% fencing die we dus gaan wegwerken door booelaanse logica om er terug
+% zuiver 1 en 0 van te maken.
+
+
 clc, clear, close all;
 
 frame_size = 10001;
+show_plots = 0;
 
 filename_base = 'pianosync.wav';
 [y,Fs] = audioread(filename_base); % 8kHz sample
@@ -14,10 +33,9 @@ data = readmatrix(filename_EMG, 'Range', 4, 'Delimiter', '\t');
 emg_sample_rate = 1000;
 emg_sync_1k = ReadEMG(data, emg_sample_rate, 1000);
 
-[emg_sync_1k, lag_emg] = Align(base_sync_1k, emg_sync_1k);
-emg_sync_1k = emg_sync_1k(lag_emg: end);
-base_sync_1k = base_sync_1k(lag_emg: end);
-
+% [emg_sync_1k, lag_emg] = Align(base_sync_1k, emg_sync_1k);
+% emg_sync_1k = emg_sync_1k(lag_emg: end);
+% base_sync_1k = base_sync_1k(lag_emg: end);
 
 [ emg_corr_start, ~] = xcorr(base_sync_1k(1:frame_size), emg_sync_1k(1:frame_size));
 %shift the signal to the correct position
@@ -30,21 +48,22 @@ else
     emg_sync_1k = emg_sync_1k(abs(max_start): end-abs(max_start));
 end
 
-figure;
-subplot(1,2,1);
-title("start")
-hold on;
-plot(emg_sync_1k(1:1000) +0.6, "r");
-plot(base_sync_1k(1:1000) - 0.6, "g");
-hold off;
-
-subplot(1,2,2);
-title("end")
-hold on;
-plot(emg_sync_1k(end-1000:end) +0.6, "r");
-plot(base_sync_1k(end-1000:end) - 0.6, "g");
-hold off;
-
+if(show_plots)
+    figure;
+    subplot(1,2,1);
+    title("start")
+    hold on;
+    plot(emg_sync_1k(1:1000) +0.6, "r");
+    plot(base_sync_1k(1:1000) - 0.6, "g");
+    hold off;
+    
+    subplot(1,2,2);
+    title("end")
+    hold on;
+    plot(emg_sync_1k(end-1000:end) +0.6, "r");
+    plot(base_sync_1k(end-1000:end) - 0.6, "g");
+    hold off;
+end
 [emg_corr_end, ~] = xcorr(base_sync_1k(end-frame_size:end), emg_sync_1k(end-frame_size:end));
 [~, max_end] = max(emg_corr_end);
 max_end = floor((frame_size-max_end))
@@ -55,30 +74,32 @@ else
     base_sync_1k = base_sync_1k(1: end-abs(max_end));
 end
 
-figure;
-subplot(1,2,1);
-title("start")
-hold on;
-plot(emg_sync_1k(1:1000) +0.6, "r");
-plot(base_sync_1k(1:1000) - 0.6, "g");
-hold off;
+if(show_plots)
+    figure;
+    subplot(1,2,1);
+    title("start")
+    hold on;
+    plot(emg_sync_1k(1:1000) +0.6, "r");
+    plot(base_sync_1k(1:1000) - 0.6, "g");
+    hold off;
+    
+    subplot(1,2,2);
+    title("end")
+    hold on;
+    plot(emg_sync_1k(end-1000:end) +0.6, "r");
+    plot(base_sync_1k(end-1000:end) - 0.6, "g");
+    hold off;
+    
+    figure
+    hold on
+    title("emg")
+    plot(emg_corr_start, "DisplayName","emgStart")
+    plot(emg_corr_end, "DisplayName","emgStop")
+    xlabel("samples"); ylabel("mag");
+    legend()
+    hold off;
 
-subplot(1,2,2);
-title("end")
-hold on;
-plot(emg_sync_1k(end-5000:end) +0.6, "r");
-plot(base_sync_1k(end-5000:end) - 0.6, "g");
-hold off;
-
-figure
-hold on
-title("emg")
-plot(emg_corr_start, "DisplayName","emgStart")
-plot(emg_corr_end, "DisplayName","emgStop")
-xlabel("samples"); ylabel("mag");
-legend()
-hold off;
-
+end
 % 
 % % Load or define your signals
  signal1 = base_sync_1k; % Your first signal here
@@ -110,28 +131,34 @@ resampled_signal2 = resample(signal2, P, Q);
 time_signal1 = (0:length(signal1)-1) / expected_sample_rate;
 time_resampled_signal2 = (0:length(resampled_signal2)-1) / expected_sample_rate;
 
-figure;
-hold on
-plot(time_signal1, signal1, "DisplayName","base");
-plot(time_resampled_signal2, resampled_signal2, "DisplayName","emg");
-xlabel('Time (s)');
-ylabel('Amplitude');
-xlim([1 2])
-hold off
+if(show_plots)
+    figure;
+    hold on
+    plot(time_signal1, signal1, "DisplayName","base");
+    plot(time_resampled_signal2, resampled_signal2, "DisplayName","emg");
+    xlabel('Time (s)');
+    ylabel('Amplitude');
+    xlim([1 2])
+    hold off
+end
 
+%Maak terug zuiver
+tresh = (abs(max(resampled_signal2)) - abs(min(resampled_signal2)))/2;
+resampled_signal2(:) = (resampled_signal2(:)> tresh);
 
-
-figure;
-subplot(1,2,1);
-title("start")
-hold on;
-plot(signal1(1:1000) +0.6, "r");
-plot(resampled_signal2(1:1000) - 0.6, "g");
-hold off;
-
-subplot(1,2,2);
-title("end")
-hold on;
-plot(signal1(end-1000:end) +0.6, "r");
-plot(resampled_signal2(end-1000:end) - 0.6, "g");
-hold off;
+if(show_plots)
+    figure;
+    subplot(1,2,1);
+    title("start")
+    hold on;
+    plot(signal1(1:1000) +0.6, "r");
+    plot(resampled_signal2(1:1000), "g");
+    hold off;
+    
+    subplot(1,2,2);
+    title("end")
+    hold on;
+    plot(signal1(end-1000:end) +0.6, "r");
+    plot(resampled_signal2(end-1000:end), "g");
+    hold off;
+end
