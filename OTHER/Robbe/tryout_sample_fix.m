@@ -11,11 +11,10 @@
 % rate te vinden.
 % 6) Deze factor gebruiken we om de P en Q te bepalen (up and down
 % samplings).
-% 7) Met P en Q resamplen we en gaan we verder naar het displayen.
+% 7) Met P en Q waardes, resamplen we het signaal.
 % 8) Doordat we gaan interpoleren, krijgen we het fenomeen genaamd picket
 % fencing die we dus gaan wegwerken door booelaanse logica om er terug
 % zuiver 1 en 0 van te maken.
-
 
 clc, clear, close all;
 
@@ -27,11 +26,13 @@ filename_base = 'pianosync.wav';
 base_sync_1k = SigConToBin(y(:, 1)', Fs, 1000);
 base_sync_1k_base = double(base_sync_1k)-0.5;
 base_sync_1k = base_sync_1k_base;
+base_indexes = 1:length(base_sync_1k);
 
 filename_EMG = 'opensignals_000780589b3a_2023-12-19_11-12-23.txt';
 data = readmatrix(filename_EMG, 'Range', 4, 'Delimiter', '\t');
 emg_sample_rate = 1000;
 emg_sync_1k = ReadEMG(data, emg_sample_rate, 1000);
+emg_indexes = 1:length(emg_sync_1k);
 
 % [emg_sync_1k, lag_emg] = Align(base_sync_1k, emg_sync_1k);
 % emg_sync_1k = emg_sync_1k(lag_emg: end);
@@ -40,12 +41,14 @@ emg_sync_1k = ReadEMG(data, emg_sample_rate, 1000);
 [ emg_corr_start, ~] = xcorr(base_sync_1k(1:frame_size), emg_sync_1k(1:frame_size));
 %shift the signal to the correct position
 [~, max_start] = max(emg_corr_start);
-max_start = floor((frame_size-max_start))
+max_start = floor((frame_size-max_start));
 
 if max_start < 0
     base_sync_1k = base_sync_1k(abs(max_start): end-abs(max_start));
+    base_indexes = base_indexes(abs(max_start): end-abs(max_start));
 else
     emg_sync_1k = emg_sync_1k(abs(max_start): end-abs(max_start));
+    emg_indexes = emg_indexes(abs(max_start): end-abs(max_start));
 end
 
 if(show_plots)
@@ -66,12 +69,14 @@ if(show_plots)
 end
 [emg_corr_end, ~] = xcorr(base_sync_1k(end-frame_size:end), emg_sync_1k(end-frame_size:end));
 [~, max_end] = max(emg_corr_end);
-max_end = floor((frame_size-max_end))
+max_end = floor((frame_size-max_end));
 
 if max_end < 0
     emg_sync_1k = emg_sync_1k(1: end-abs(max_end));
+    emg_indexes = emg_indexes(1: end-abs(max_end));
 else
     base_sync_1k = base_sync_1k(1: end-abs(max_end));
+    base_indexes = base_indexes(1: end-abs(max_end));
 end
 
 if(show_plots)
@@ -118,7 +123,7 @@ delay_samples = lags(max_corr_index);
 actual_sample_rate = expected_sample_rate * numel(signal2) / (numel(signal1) + delay_samples);
 
 % Find a rational resampling factor
-resampling_factor = actual_sample_rate / expected_sample_rate
+resampling_factor = actual_sample_rate / expected_sample_rate;
 [P, Q] = rat(resampling_factor);
 
 % Resample signal2 to match the sampling rate of signal1
@@ -162,3 +167,11 @@ if(show_plots)
     plot(resampled_signal2(end-1000:end), "g");
     hold off;
 end
+
+
+disp("base_indexes " + string(mat2str([base_indexes(1), base_indexes(end)])));
+disp("emg_indexes " + string(mat2str([emg_indexes(1), emg_indexes(end)])));
+disp("actual_sample_rate " + actual_sample_rate);
+disp("P " + P);
+disp("Q " + Q);
+

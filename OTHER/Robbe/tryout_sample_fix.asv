@@ -11,16 +11,15 @@
 % rate te vinden.
 % 6) Deze factor gebruiken we om de P en Q te bepalen (up and down
 % samplings).
-% 7) Met P en Q resamplen we en gaan we verder naar het displayen.
+% 7) Met P en Q waardes, resamplen we het signaal.
 % 8) Doordat we gaan interpoleren, krijgen we het fenomeen genaamd picket
 % fencing die we dus gaan wegwerken door booelaanse logica om er terug
 % zuiver 1 en 0 van te maken.
 
-
 clc, clear, close all;
 
 frame_size = 10001;
-show_plots = 1;
+show_plots = 0;
 
 filename_base = 'pianosync.wav';
 [y,Fs] = audioread(filename_base); % 8kHz sample
@@ -131,32 +130,34 @@ resampled_signal2 = resample(signal2, P, Q);
 time_signal1 = (0:length(signal1)-1) / expected_sample_rate;
 time_resampled_signal2 = (0:length(resampled_signal2)-1) / expected_sample_rate;
 
-figure;
-hold on
-plot(time_signal1, signal1, "DisplayName","base");
-plot(time_resampled_signal2, resampled_signal2, "DisplayName","emg");
-xlabel('Time (s)');
-ylabel('Amplitude');
-xlim([1 2])
-hold off
-
+if(show_plots)
+    figure;
+    hold on
+    plot(time_signal1, signal1, "DisplayName","base");
+    plot(time_resampled_signal2, resampled_signal2, "DisplayName","emg");
+    xlabel('Time (s)');
+    ylabel('Amplitude');
+    xlim([1 2])
+    hold off
+end
 
 %Maak terug zuiver
 tresh = (abs(max(resampled_signal2)) - abs(min(resampled_signal2)))/2;
 resampled_signal2(:) = (resampled_signal2(:)> tresh);
 
-
-figure;
-subplot(1,2,1);
-title("start")
-hold on;
-plot(signal1(1:1000) +0.6, "r");
-plot(resampled_signal2(1:1000), "g");
-hold off;
-
-subplot(1,2,2);
-title("end")
-hold on;
-plot(signal1(end-1000:end) +0.6, "r");
-plot(resampled_signal2(end-1000:end), "g");
-hold off;
+if(show_plots)
+    figure;
+    subplot(1,2,1);
+    title("start")
+    hold on;
+    plot(signal1(1:1000) +0.6, "r");
+    plot(resampled_signal2(1:1000), "g");
+    hold off;
+    
+    subplot(1,2,2);
+    title("end")
+    hold on;
+    plot(signal1(end-1000:end) +0.6, "r");
+    plot(resampled_signal2(end-1000:end), "g");
+    hold off;
+end
