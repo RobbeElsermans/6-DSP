@@ -13,13 +13,13 @@
 % samplings).
 % 7) Met P en Q waardes, resamplen we het signaal.
 % 8) Doordat we gaan interpoleren, krijgen we het fenomeen genaamd picket
-% fencing die we dus gaan wegwerken door booelaanse logica om er terug
-% zuiver 1 en 0 van te maken.
+% fencing die we dus gaan wegwerken door boolaanse logica om er terug
+% zuiver 1 en 0 van te maken (en daarna dc wegwerken).
 
 clc, clear, close all;
 
-frame_size = 10001;
-show_plots = 0;
+frame_size = 5001;
+show_plots = 1;
 
 %% 1)
 
@@ -44,14 +44,23 @@ emg_indexes = 1:length(emg_sync_1k);
 max_start = floor((frame_size-max_start));
 
 if max_start < 0
-    base_sync_1k = base_sync_1k(abs(max_start): end-abs(max_start));
-    base_indexes = base_indexes(abs(max_start): end-abs(max_start));
+    base_sync_1k = base_sync_1k(abs(max_start): end);
+    base_indexes = base_indexes(abs(max_start): end);
 else
-    emg_sync_1k = emg_sync_1k(abs(max_start): end-abs(max_start));
-    emg_indexes = emg_indexes(abs(max_start): end-abs(max_start));
+    emg_sync_1k = emg_sync_1k(abs(max_start): end);
+    emg_indexes = emg_indexes(abs(max_start): end);
 end
 
 if(show_plots)
+
+    figure
+    hold on
+    title("emg")
+    plot(emg_corr_start, "DisplayName","emgStart")
+    xlabel("samples"); ylabel("mag");
+    legend()
+    hold off;
+
     figure;
     subplot(1,2,1);
     title("start")
@@ -65,6 +74,15 @@ if(show_plots)
     hold on;
     plot(emg_sync_1k(end-1000:end) +0.6, "r");
     plot(base_sync_1k(end-1000:end) - 0.6, "g");
+    hold off;
+
+    figure
+    hold on
+    title("full signal")
+    plot(emg_sync_1k, "DisplayName","emg_sig")
+    plot(base_sync_1k, "DisplayName","base_sig")
+    xlabel("samples"); ylabel("value");
+    legend()
     hold off;
 end
 
@@ -83,6 +101,15 @@ else
 end
 
 if(show_plots)
+
+    figure
+    hold on
+    title("emg")
+    plot(emg_corr_end, "DisplayName","emgEnd")
+    xlabel("samples"); ylabel("mag");
+    legend()
+    hold off;
+
     figure;
     subplot(1,2,1);
     title("start")
@@ -97,18 +124,27 @@ if(show_plots)
     plot(emg_sync_1k(end-1000:end) +0.6, "r");
     plot(base_sync_1k(end-1000:end) - 0.6, "g");
     hold off;
-    
+
+    figure
+    hold on
+    title("full signal")
+    plot(emg_sync_1k, "DisplayName","emg_sig")
+    plot(base_sync_1k, "DisplayName","base_sig")
+    xlabel("samples"); ylabel("value");
+    legend()
+    hold off;
+
     figure
     hold on
     title("emg")
     plot(emg_corr_start, "DisplayName","emgStart")
-    plot(emg_corr_end, "DisplayName","emgStop")
+    plot(emg_corr_end, "DisplayName","emgEnd")
+    xline(frame_size);
     xlabel("samples"); ylabel("mag");
     legend()
     hold off;
 
 end
-
 %% 4) 
 
 % % Load or define your signals
@@ -126,31 +162,47 @@ delay_samples = lags(max_corr_index);
 %% 5)
 % Calculate the actual sampling rate of signal2 based on the delay of the
 % samples
-actual_sample_rate = expected_sample_rate * numel(signal2) / (numel(signal1) + delay_samples);
+actual_sample_rate = expected_sample_rate * numel(signal2) / (numel(signal1));
 %% 6)
 % Find a rational resampling factor
-resampling_factor = actual_sample_rate / expected_sample_rate;
+resampling_factor = expected_sample_rate/actual_sample_rate;
 [P, Q] = rat(resampling_factor);
 
 %% 7)
 % Resample signal2 to match the sampling rate of signal1
+
+disp("before resample");
+disp("base_indexes " + string(mat2str([base_indexes(1), base_indexes(end)])));
+disp("emg_indexes " + string(mat2str([emg_indexes(1), emg_indexes(end)])));
+
 resampled_signal2 = resample(signal2, P, Q);
 
 % Now signal1 and resampled_signal2 should have the same sampling rate
 
 % Plot the original and resampled signals (optional)
 % Time axes
-time_signal1 = (0:length(signal1)-1) / expected_sample_rate;
-time_resampled_signal2 = (0:length(resampled_signal2)-1) / expected_sample_rate;
+time_signal1 = (1:length(signal1))/expected_sample_rate;
+time_resampled_signal2 = (1:length(resampled_signal2))/expected_sample_rate;
 
 if(show_plots)
+
+    figure
+    hold on
+    title("full signal")
+    plot(signal2, "DisplayName","emg_sig")
+    plot(signal1, "DisplayName","base_sig")
+    xlabel("samples"); ylabel("value");
+    ylim([-1 1])
+    legend()
+    hold off;
+
     figure;
     hold on
     plot(time_signal1, signal1, "DisplayName","base");
     plot(time_resampled_signal2, resampled_signal2, "DisplayName","emg");
     xlabel('Time (s)');
     ylabel('Amplitude');
-    xlim([1 2])
+    ylim([-1 1])
     hold off
 end
 
@@ -177,7 +229,7 @@ if(show_plots)
     hold off;
 end
 
-
+disp("After resample");
 disp("base_indexes " + string(mat2str([base_indexes(1), base_indexes(end)])));
 disp("emg_indexes " + string(mat2str([emg_indexes(1), emg_indexes(end)])));
 disp("actual_sample_rate " + actual_sample_rate);
