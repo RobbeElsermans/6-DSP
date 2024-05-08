@@ -24,10 +24,12 @@ frame_size = 5001;
     emg_file, emg_sample_rate, ...
     perfusion_file, perfusion_sample_rate, ...
     video_file, video_sample_rate, ...
-    base_sample_rate, frame_size);
+    base_sample_rate, frame_size, 1);
 
 display_points = 5000;
 
+
+figure;
 hold on
 plot(base.sync(1:display_points)+3.3);
 plot(emg.sync(1:display_points)+2.2);

@@ -16,7 +16,7 @@ function [estimate_sample_rate, P, Q] = estimateSampleRate(signalA, signalB, sig
     % [max_corr, max_corr_index] = max(abs(corr_values));
     % delay_samples = lags(max_corr_index);
 
-    estimate_sample_rate = signalB_sample_rate * numel(signalB) / numel(signalA)
+    estimate_sample_rate = signalB_sample_rate * numel(signalB) / numel(signalA);
     resampling_factor = estimate_sample_rate / signalB_sample_rate;
     [P, Q] = rat(resampling_factor);
 end
