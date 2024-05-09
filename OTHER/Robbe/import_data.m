@@ -38,10 +38,11 @@ plot(video.sync(1:display_points));
 
 % now do something with the data!
 
-
 title("1kHz signals");
 ylim([-1 4]);
-legend("base", "EMG", "blood", "video");
+legend("base", "EMG", "perfusion", "video");
+xlabel("samples at 1kHz");
+ylabel("sync value");
 hold off;
 
 % to debug. Maybe change when in app?

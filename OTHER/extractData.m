@@ -45,10 +45,10 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
         ylabel('Correlation in dB');
         ylim([-40 1]);
         xlim([2000 6000]);
-        title('Cross-correlation emg');
+        title('Cross-correlation emg before align');
 
         figure;
-        title("sync and emg before align")
+        
         subplot(1,2,1);
         subtitle("beginning of signal");
         hold on;
@@ -68,6 +68,7 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
         xlabel("samples");
         ylabel("value");
         hold off;
+        sgtitle("sync and emg before align")
         
     end
 
@@ -75,6 +76,18 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
     [base_sync_1k,~, emg_sync_1k, ~] = alignByCorr(base_sync_1k, base_indexes, emg_sync_1k, emg_indexes, frame_size);
     
     if debug
+        [correlation_emg, lag_emg] = xcorr(base_sync_1k, emg_sync_1k);
+        correlation_emg = correlation_emg/max(correlation_emg); % normalize
+        correlation_emg = 20.*log10(correlation_emg); % to dB
+
+        figure
+        plot(lag_emg, correlation_emg);
+        xlabel('Lag');
+        ylabel('Correlation in dB');
+        ylim([-40 1]);
+        xlim([-1000 1000]);
+        title('Cross-correlation emg after align');
+
         figure;
         subplot(1,2,1);
         subtitle("beginning of signal");
@@ -95,7 +108,7 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
         xlabel("samples");
         ylabel("value");
         hold off;
-        title("sync and emg after align")
+        sgtitle("sync and emg after align")
     end
 
     % estimate based on current samples
@@ -142,7 +155,7 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
     [blood_sync_1k, lag_blood_1, blood_indexes] = Align(base_sync_1k, blood_sync_1k, blood_indexes);
     [video_sync_1k, lag_video_1,video_indexes] = Align(base_sync_1k, video_sync_1k, video_indexes);
     
-    temp =  max([lag_emg_1, lag_blood_1 lag_video_1]);
+    temp =  max([lag_emg_1 lag_blood_1 lag_video_1]);
     start_delay = 1*(temp == 0)+temp*(temp ~= 0);
     
     %set everything to start at 1 point
@@ -165,6 +178,21 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
     blood_indexes = base_indexes(1:end_delay);
     video_sync_1k = video_sync_1k(1:end_delay);
     video_indexes = base_indexes(1:end_delay);
+
+
+    if debug
+        [correlation_emg, lag_emg] = xcorr(base_sync_1k, emg_sync_1k);
+        correlation_emg = correlation_emg/max(correlation_emg); % normalize
+        correlation_emg = 20.*log10(correlation_emg); % to dB
+
+        figure
+        plot(lag_emg, correlation_emg);
+        xlabel('Lag');
+        ylabel('Correlation in dB');
+        ylim([-40 1]);
+        xlim([-1000 1000]);
+        title('Cross-correlation emg after resample');
+    end
     
     %assign to output values
     base.sync = base_sync_1k();
