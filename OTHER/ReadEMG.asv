@@ -1,0 +1,7 @@
+function [emg_sync] = ReadEMG(filename_EMG, emg_sample_rate, base_sample_rate)
+    % "column": ["index", "overbodig", "sync", "spier 1", "spier 2"]
+    data = readmatrix(filename_EMG, 'Range', 4, 'Delimiter', '\t');
+    emg_sync = data(:, 3);
+    
+end
+
