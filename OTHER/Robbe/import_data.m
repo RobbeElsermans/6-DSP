@@ -11,6 +11,8 @@ perfusion_file = "perfusion_and_sync_19-Dec-2023-11_15_20.mat";
 perfusion_sample_rate = 1000;
 video_file = "elina3_nogapfilling.mat";
 video_sample_rate = 300;
+poi = [637.1 457.7 193.6];
+poi_tolerance = [10 10 10];
 
 base_sample_rate = 1000;
 frame_size = 5001;
@@ -19,12 +21,13 @@ frame_size = 5001;
 % .sync
 % .data
 % .indexes relative to sampled frequency
+
 [base, emg, blood, video] = extractData( ...
     sync_file, ...
     emg_file, emg_sample_rate, ...
     perfusion_file, perfusion_sample_rate, ...
-    video_file, video_sample_rate, ...
-    base_sample_rate, frame_size, 1);
+    video_file, video_sample_rate, poi, poi_tolerance, ...
+    base_sample_rate, frame_size, 0);
 
 display_points = 5000;
 
