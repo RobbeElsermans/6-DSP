@@ -3,7 +3,7 @@ clc, clear, close all;
 addpath OTHER
 addpath DATASET
 
-sync_file = 'pianosync.wav';
+sync_file = 'pianosync_44_1kHz.wav';
 % sample rate is in the wav itself
 emg_file = 'opensignals_000780589b3a_2023-12-19_11-12-23.txt';
 emg_sample_rate = 1000;
