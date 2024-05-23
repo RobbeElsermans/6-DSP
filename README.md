@@ -9,7 +9,7 @@ In the given dataset, the EMG signal was sampled at 1kHz. But in practice this s
 
 We can observe from the correlation graph below that the EMG signals correlates on to many places with the pseudo random sync signal.
 
-![EMG correlation with base signal before the aligning by correlation](DOCS/EMG_corr_base_before_align.png)
+![EMG correlation with base signal before the aligning by correlation](DOCS/assets/EMG_corr_base_before_align.png)
 
 We came up with a way to extract the correct sample frequency from the EMG signal based on the base signal. These are the steps we took:
 1. We resample the signals gien to 1kHz
@@ -21,7 +21,7 @@ when we correlate a signal with 20000 points, this gives us 40000 points to proc
 
 Below, the cross correlation where we see that the correlation spread is now arround the center (0) so this means that the signals are aligned at the beginnin and at the end.
 
-![EMG correlation with base signal after the aligning by correlation](DOCS/EMG_corr_base_after_align.png)
+![EMG correlation with base signal after the aligning by correlation](DOCS/assets/EMG_corr_base_after_align.png)
 
 4. The signals now start and stop at the same place. Because EMG is sampled at a different rate then the base signal, 
 means that the EMG signal can have more points (sampled at a higher rate then 1kHz) or less points (sampled at a lower rate then 1kHz).
@@ -36,7 +36,7 @@ sample frequency of the EMG signal. In our case, we came up with a sample rate o
 
 6. We check once more the full correlation of the EMG signal with the bas.
 
-![EMG correlation with base signal after resampling with correct sample rate](DOCS/EMG_corr_base_after_resample.png)
+![EMG correlation with base signal after resampling with correct sample rate](DOCS/assets/EMG_corr_base_after_resample.png)
 
 ## Aligning the data based on the pseudo random signal
 
@@ -58,7 +58,7 @@ As can be observed, all the noise arround is gone and we have a single point of 
 
 When observing a portion of the synchronization values, we see that they are aligned.
 
-![portion of synchronized signals](DOCS/sync_signals_after_resample.png)
+![portion of synchronized signals](DOCS/assets/sync_signals_after_resample.png)
 
 ## EMG data smoother (or filter)
 To smoothen the EMG data the following step were applied:
