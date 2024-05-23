@@ -4,7 +4,6 @@ function [] = AddPaths()
             disp('MAC')
         case isunix
             disp('Linux')
-            addpath OTHER
             addpath DATASET/real
             addpath DATASET/example
         case ispc
