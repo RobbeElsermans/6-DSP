@@ -1,0 +1,17 @@
+function [filtered_data] = EMG_filter(emg_data)
+% EMG_FILTER:
+%   Filters the EMG data from any picked up noise during 
+% INPUT:
+%   
+% OUTPUT:
+%   
+
+    f_low = 10;     % Lower cutoff frequency
+    f_high = 250;   % Upper cutoff frequency
+    freq_range = [f_low/(emg_sample_rate/2), f_high/(emg_sample_rate/2)];
+    filter_order = 3;
+
+    [b, a] = butter(filter_order, freq_range, 'bandpass');
+    filtered_data = filtfilt(b, a, emg_data);
+end
+
