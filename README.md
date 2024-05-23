@@ -1,5 +1,7 @@
 
 # How to use
+Please install Signal Processing Toolbox before useing our GUI.
+Executable is compiled on a Windows 10 pc.
 
 
 
@@ -81,9 +83,11 @@ The following filters where applied to the EMG sample data to find the most effi
   - Chebishev-I filter
   - Chebishev-II filter
   - Eliptical filter
+
 ![filter effects](./DOCS/filter_effects.jpg)
 
 As seen in the graphs only the Chebishev-I filter has largely unwanted effects. The bode plots of these filters will be needed to decide which filter will be applied.
+
 ![bode plots](./DOCS/bode_plot.jpg)
 
 As seen in the magnitude plot:
@@ -93,6 +97,7 @@ As seen in the magnitude plot:
   - The Eliptical filter has a combination of the worst effects of both the Buttersworth & Chebishev-II filter.
 
 The phase plot can be ignored since the [filtfilt-function](https://nl.mathworks.com/help/signal/ref/filtfilt.html) removes any phase shift of the filter by processing data in both a forward and reverse direction.
+
 ![filter vs filtfilt](./DOCS/filter_vs_filtfilt.jpg)
 
 The matlab-function [**EMG_filter**](./OTHER/Tom/EMG_filter.m) is provided for this functionality.
@@ -101,6 +106,7 @@ The matlab-function [**EMG_filter**](./OTHER/Tom/EMG_filter.m) is provided for t
 
   3) Create an envelope (**EMG_to_envelope**)
 An envelope is a smoothed out version of the signal, highlighting the changes in amplitude. It is mostly used to help identify significant features from an otherwise complex signal.
+
 ![envelope](./DOCS/envelope.jpg)
 
 The matlab-function [**EMG_to_envelope**](./OTHER/Tom/EMG_to_envelope.m) is provided for this functionality.

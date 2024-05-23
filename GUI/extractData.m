@@ -204,6 +204,5 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
     
     video.sync = video_sync_1k;
     video.data = zeros(1, length(video_sync_1k));
-    video.range = video_indexes;
 
 end
