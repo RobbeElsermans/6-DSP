@@ -68,7 +68,7 @@ To smoothen the EMG data the following step were applied:
 The EMG sensor works on a 3.3V operating voltage with a gain of around 1000. This means that the amplitude original signal must sway between -1.65mV & 1.65mV. Due to it being a sensor, the data is stored in a digital format using 12-bits.
 
 To get the real signal we must convert the measured data via the following formula:
-$`\EMG(mV)=(ADC/(2^n)-1/2)*(V_CC)/(G_EMG)*1000`$
+$`EMG(mV)=(ADC/(2^n)-1/2)*(V_CC)/(G_EMG)*1000`$
 The formula can be fount in [this datasheet](https://support.pluxbiosignals.com/wp-content/uploads/2021/11/revolution-emg-sensor-datasheet-1.pdf)
 
 The matlab-function [**EMG_to_mV**](./OTHER/Tom/EMG_to_mV.m) is provided for this functionality.
