@@ -7,11 +7,11 @@ There was 1 problem with the EMG data because it was designed to be sampled on 1
 We also had to visualize the EMG data in a readable mannor by using filters to make shure the data displayed has meaning to the end user.
 
 ## Table of contents
-- [Documentation code](##Documentation-code)
-    - [Wrong EMG signal sample frequency](###Wrong-EMG-signal-sample-frequency)
-    - [Aligning the data based on the pseudo random signal](###Aligning-the-data-based-on-the-pseudo-random-signal)
-    - [EMG data smoother](###EMG-data-smoother)
-- [Who did what](##Who-did-what)
+- [Documentation code](#Documentation-code)
+    - [Wrong EMG signal sample frequency](##Wrong-EMG-signal-sample-frequency)
+    - [Aligning the data based on the pseudo random signal](##Aligning-the-data-based-on-the-pseudo-random-signal)
+    - [EMG data smoother (or filter)](##EMG-data-smoother-(or-filter))
+- [Who did what](#Who-did-what)
 
 ## Documentation code
 
@@ -72,7 +72,68 @@ The steps we've taken:
 
 When observing a portion of the synchronization values, we see that they are aligned.
 
+Both resample EMG and aligning the samples are done in the matlab-function [**extractData**](./OTHER/extractData.m) and a test case is added in the matlab-script [**import_data**](./OTHER/Robbe/import_data.m)
+
 ### EMG data smoother (or filter)
+To smoothen the EMG data the following step were applied:
+  1) Digital to analog data (**EMG_to_mV**)
+The EMG sensor works on a 3.3V operating voltage with a gain of around 1000. This means that the amplitude original signal must sway between -1.65mV & 1.65mV. Due to it being a sensor, the data is stored in a digital format using 12-bits.
+
+To get the real signal we must convert the measured data via the following formula:</br>
+
+$EMG(mV)=(ADC/(2^n)-1/2)*(V_{CC})/(G_{EMG})*1000$
+</br>The formula can be fount in [this datasheet](https://support.pluxbiosignals.com/wp-content/uploads/2021/11/revolution-emg-sensor-datasheet-1.pdf)
+
+The matlab-function [**EMG_to_mV**](./OTHER/Tom/EMG_to_mV.m) is provided for this functionality.
+  - INPUT:  - emg_data: The EMG data in 12-bit format
+  - OUPTUT: - mV_data:  The EMG data in milli-Volts
+
+  2) Filter the frequency range (**EMG_filter**)
+The sensor has a bandwidth of 500Hz. The following [article](https://www.nature.com/articles/s41598-023-33319-4) specifies that the Power spectrum of the EMG data is mostly within the 10-250Hz range. This means that we can apply a bandpass filter to remove the noise.
+
+The following filters where applied to the EMG sample data to find the most efficient filter:
+  - Buttersworth filter
+  - Chebishev-I filter
+  - Chebishev-II filter
+  - Eliptical filter
+
+![filter effects](./DOCS/filter_effects.jpg)
+
+As seen in the graphs only the Chebishev-I filter has largely unwanted effects. The bode plots of these filters will be needed to decide which filter will be applied.
+
+![bode plots](./DOCS/bode_plot.jpg)
+
+As seen in the magnitude plot:
+  - The Buttersworth filter is stable in the wanted bandwidth, but starts attenuating before 250Hz and has a slow decent.
+  - The Chebishev-I filter is unstable in the wanted bandwidth and starts drastically attenuating before 250Hz, though it has a sharp decent.
+  - The Chebishev-II filter is stable in the wanted bandwidth, but the attenuation peaks around 250Hz only to rise back up until 500Hz.
+  - The Eliptical filter has a combination of the worst effects of both the Buttersworth & Chebishev-II filter.
+
+The phase plot can be ignored since the [filtfilt-function](https://nl.mathworks.com/help/signal/ref/filtfilt.html) removes any phase shift of the filter by processing data in both a forward and reverse direction.
+
+![filter vs filtfilt](./DOCS/filter_vs_filtfilt.jpg)
+
+The matlab-function [**EMG_filter**](./OTHER/Tom/EMG_filter.m) is provided for this functionality.
+  - INPUT:  - emg_data:       The EMG data in milli-Volts
+  - OUPTUT: - filtered_data:  The filtered EMG dta
+
+  3) Create an envelope (**EMG_to_envelope**)
+An envelope is a smoothed out version of the signal, highlighting the changes in amplitude. It is mostly used to help identify significant features from an otherwise complex signal.
+
+![envelope](./DOCS/envelope.jpg)
+
+The matlab-function [**EMG_to_envelope**](./OTHER/Tom/EMG_to_envelope.m) is provided for this functionality.
+  - INPUT:  - emg_data: The EMG data in milli-Volts
+  - OUPTUT: - envelope: The envelope of the EMG data
+
+  4) Normalize the data (**EMG_normalize**)
+Lastly the signal gets normalized to ensure an equal metric over different data sets and sensors.
+
+The matlab-function [**EMG_normalize**](./OTHER/Tom/EMG_normalize.m) is provided for this functionality.
+  - INPUT:  - emg_data:   The EMG data in milli-Volts
+            - mvc_data:   The EMG reference data in milli-Volts
+  - OUPTUT: - norm_data:  The normalized EMG data (with reference to the maximum MVC data)
+
 
 ## Who did what
 ### Berkay
