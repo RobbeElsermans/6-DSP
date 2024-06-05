@@ -1,7 +1,8 @@
 %% Will import the data that is aligned
-% 
-% [y1,Fs1] = audioread("DATASET\real\01-240325_1339(1).wav");
-% [y2,Fs2] = audioread("DATASET\real\Rekem001_chopin_C_pianosync(1).wav");
+
+[y1,Fs1] = audioread("DATASET\real\01-240325_1339(1).wav");
+[y2,Fs2] = audioread(");
+
 
 clc, clear, close all;
 addpath OTHER
