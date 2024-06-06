@@ -5,11 +5,13 @@ function [] = AddPaths()
         case isunix
             disp('Linux')
             addpath OTHER
-            addpath DATASET
+            addpath DATASET/example
+            addpath DATASET/real
         case ispc
             disp('Windows')
             addpath OTHER\
-            addpath DATASET\
+            addpath DATASET\example
+            addpath DATASET\real
         otherwise
             warning('Platform not supported')
     end
