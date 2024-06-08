@@ -144,7 +144,16 @@ function [base, emg, blood, video] = extractData(base_path, emg_path, origin_emg
     [blood_data_1k(2,:), ~] = resampleSignal(blood_data(2,:), origin_blood_freq, base_freq, 1);
 
     raw_video_data = load(video_path);
-    video_capture_300 = double(QTMToBin(raw_video_data.elina3.Trajectories.Unidentified.Data, poi, poi_tolerance))';
+
+    % omdat soms voor CHOPIN3_motiontracking_cropped.mat het
+    % "raw_video_data.CHOPIN3_nogapfilling" moet zijn maar voor
+    %  elina3_nogapfilling "raw_video_data.elina3"
+    field_name = fieldnames(raw_video_data);
+    field_name = field_name{1};
+    video_capture_300 = double(QTMToBin(raw_video_data.(field_name).Trajectories.Unidentified.Data, poi, poi_tolerance))';
+
+    
+    %video_capture_300 = double(QTMToBin(raw_video_data.elina3.Trajectories.Unidentified.Data, poi, poi_tolerance))';
     [video_sync_1k, video_indexes] = resampleSignal(video_capture_300, origin_video_freq, base_freq, 0);
     
 
