@@ -1,6 +1,6 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
   <configuration build-checksum="2063775305" file="D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer.prj" location="D:\UA\Semester6\DSP\Project\6-DSP\GUI" name="PianoPlayerDataSynchronizer" preferred-package-location="D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
-    <param.appname>PianoDataSynchronizer</param.appname>
+    <param.appname>PianoPlayerDataSynchronizer</param.appname>
     <param.icon>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon.ico</param.icon>
     <param.icons>
       <file>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon_48.png</file>
@@ -8,7 +8,7 @@
       <file>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon_24.png</file>
       <file>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon_16.png</file>
     </param.icons>
-    <param.version>1.0</param.version>
+    <param.version>1.1</param.version>
     <param.authnamewatermark>R. Elsermans, T. Kramp, B. Yildirim</param.authnamewatermark>
     <param.email />
     <param.company />
@@ -16,7 +16,7 @@
     <param.description>Image of the app generated with Dalle3</param.description>
     <param.screenshot>C:\Users\berka\Downloads\DALL·E 2024-06-08 16.17.31 - A logo for a MATLAB application that syncs piano data. The design should feature a piano keyboard and musical notes, incorporating elements that sugge_result.jpg</param.screenshot>
     <param.guid />
-    <param.installpath.string>\PianoDataSynchronizer\</param.installpath.string>
+    <param.installpath.string>\PianoPlayerDataSynchronizer\</param.installpath.string>
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
@@ -48,7 +48,6 @@
 	 -?  print help on how to use the application 
 	 input arguments</param.help.text>
     <unset>
-      <param.version />
       <param.email />
       <param.company />
       <param.guid />
@@ -96,7 +95,7 @@
     </fileset.depfun>
     <build-deliverables>
       <file location="${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing" name="readme.txt" optional="true">D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_testing\readme.txt</file>
-      <file location="${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing" name="PianoDataSynchronizer.exe" optional="false">D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_testing\PianoDataSynchronizer.exe</file>
+      <file location="${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing" name="PianoPlayerDataSynchronizer.exe" optional="false">D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_testing\PianoPlayerDataSynchronizer.exe</file>
       <file location="${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing" name="splash.png" optional="false">D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_testing\splash.png</file>
     </build-deliverables>
     <workflow />
