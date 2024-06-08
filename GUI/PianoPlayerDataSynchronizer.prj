@@ -1,0 +1,124 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="2063775305" file="D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer.prj" location="D:\UA\Semester6\DSP\Project\6-DSP\GUI" name="PianoPlayerDataSynchronizer" preferred-package-location="D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>PianoPlayerDataSynchronizer</param.appname>
+    <param.icon>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon.ico</param.icon>
+    <param.icons>
+      <file>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon_48.png</file>
+      <file>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon_32.png</file>
+      <file>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon_24.png</file>
+      <file>${PROJECT_ROOT}\PianoPlayerDataSynchronizer_resources\icon_16.png</file>
+    </param.icons>
+    <param.version>1.0</param.version>
+    <param.authnamewatermark>R. Elsermans, T. Kramp, B. Yildirim</param.authnamewatermark>
+    <param.email />
+    <param.company />
+    <param.summary>An applictaion made for 6-Digital Signal Processing for prossesing data</param.summary>
+    <param.description />
+    <param.screenshot>C:\Users\berka\Downloads\DALL·E 2024-06-08 16.17.31 - A logo for a MATLAB application that syncs piano data. The design should feature a piano keyboard and musical notes, incorporating elements that sugge_result.jpg</param.screenshot>
+    <param.guid />
+    <param.installpath.string>\PianoPlayerDataSynchronizer\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\PianoPlayerDataSynchronizer</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>PianoPlayerDataSynchronizer_Installer</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text>Syntax 
+	  -? 
+	 
+ Input Arguments 
+	 -?  print help on how to use the application 
+	 input arguments</param.help.text>
+    <unset>
+      <param.version />
+      <param.email />
+      <param.company />
+      <param.description />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.target.install.notes />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.logdir />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\piano.mlapp</file>
+    </fileset.main>
+    <fileset.resources />
+    <fileset.package />
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\Align.m</file>
+      <file>${PROJECT_ROOT}\alignByCorr.m</file>
+      <file>${PROJECT_ROOT}\EMG_filter.m</file>
+      <file>${PROJECT_ROOT}\EMG_normalize.m</file>
+      <file>${PROJECT_ROOT}\EMG_to_envelope.m</file>
+      <file>${PROJECT_ROOT}\EMG_to_mV.m</file>
+      <file>${PROJECT_ROOT}\estimateSampleRate.m</file>
+      <file>${PROJECT_ROOT}\extractData.m</file>
+      <file>${PROJECT_ROOT}\QTMToBin.m</file>
+      <file>${PROJECT_ROOT}\resampleSignal.m</file>
+    </fileset.depfun>
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing" name="readme.txt" optional="true">D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing" name="PianoPlayerDataSynchronizer.exe" optional="false">D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_testing\PianoPlayerDataSynchronizer.exe</file>
+      <file location="${PROJECT_ROOT}\PianoPlayerDataSynchronizer\for_testing" name="splash.png" optional="false">D:\UA\Semester6\DSP\Project\6-DSP\GUI\PianoPlayerDataSynchronizer\for_testing\splash.png</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2023b</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
