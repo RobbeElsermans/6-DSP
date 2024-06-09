@@ -5,6 +5,8 @@ Welcome to our GUI application! Before diving in, please ensure you have the fol
 - Signal Processing Toolbox
 - Parallel Computing Toolbox
 
+The executables can be found in **GUI\PianoPlayerDataSynchronizer**.
+
 ### System Requirements
 - Executable compiled on a Windows 10 PC.
 
