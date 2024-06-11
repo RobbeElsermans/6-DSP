@@ -1,11 +1,12 @@
 
 # How to Use
 
-Welcome to our GUI application! Before diving in, please ensure you have the following toolboxes installed:
+Welcome to our GUI application! If you want to use it in MATLAB, please ensure you have the following toolboxes installed:
 - Signal Processing Toolbox
 - Parallel Computing Toolbox
 
-The executables can be found in **GUI\PianoPlayerDataSynchronizer**.
+If you just want the executables, you can find them here:
+**GUI\PianoPlayerDataSynchronizer**.
 
 ### System Requirements
 - Executable compiled on a Windows 10 PC.
